@@ -17,9 +17,12 @@ try {
 }
 const app = express();
 
-app.get("/things", (req, res) => {
-  client.query("SELECT * FROM cards;");
-  res.send("Good to go");
+app.use(express.static("public"));
+
+app.get("/cards", (req, res) => {
+  client.query("SELECT * FROM cards;").then((result) => {
+    res.send(result.rows);
+  });
 });
 
 app.listen(3030, () => {

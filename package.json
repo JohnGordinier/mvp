@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "migrate": "psql -f migration.sql -d pokemon_bank: psql -f seed.sql -d pokemon_bank"
+    "migrate": "psql -f migration.sql -d pokemon_bank: psql -f seed.sql -d pokemon_bank",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",

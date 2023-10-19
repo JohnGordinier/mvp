@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS cards;
-
+DROP TABLE IF EXISTS trainer;
 CREATE TABLE trainer (
     id SERIAL NOT NULL,
     first_name TEXT NOT NULL,
@@ -9,12 +9,12 @@ CREATE TABLE trainer (
 );
 
 CREATE TABLE cards (
+    id SERIAL PRIMARY KEY,
     trainer_id INTEGER NOT NULL,
     year INTEGER NOT NULL,
     name TEXT NOT NULL,
     value INTEGER NOT NULL,
     grade TEXT NOT NULL,
-    PRIMARY KEY (trainer_id),
     FOREIGN KEY (trainer_id) REFERENCES trainer (id)
 );
 
