@@ -1,4 +1,4 @@
-// console.log("working");
+console.log("working");
 
 // // Prompt for Trainer ID
 // const trainerId = prompt("Enter your Trainer ID");
@@ -40,9 +40,6 @@
 // }
 
 // Prompt for Trainer ID
-const trainerId = prompt("Enter your Trainer ID");
-
-// Check if trainerId is valid (you may want to add more validation)
 if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   alert(
     "Invalid Trainer ID. Please reload the page and enter a valid Trainer ID."
@@ -51,7 +48,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   const myContainer = document.getElementById("myContainer");
   const allOthersContainer = document.getElementById("allOthersContainer");
 
-  // Function to fetch and display cards for a specific trainer
+  // Function to fetch and display cards for the specified trainer
   const showMyCards = () => {
     // Clear existing content in the containers
     myContainer.innerHTML = "";
@@ -86,11 +83,39 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       });
   };
 
-  // Create a button to show the cards
-  const showCardsButton = document.createElement("button");
-  showCardsButton.textContent = "My Cards";
-  showCardsButton.addEventListener("click", showMyCards);
+  // Function to fetch and display cards for all other trainers
+  const showAllOtherCards = () => {
+    // Clear existing content in the containers
+    myContainer.innerHTML = "";
+    allOthersContainer.innerHTML = "";
 
-  // Add the button to the body
-  document.body.appendChild(showCardsButton);
+    // Fetch cards for all other trainers
+    fetch(`/cards/all/${trainerId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((cards) => {
+        // Display cards in the allOthersContainer
+        cards.forEach((card) => {
+          const cardDiv = document.createElement("div");
+          cardDiv.classList.add("card");
+          cardDiv.innerHTML = `<p>${
+            (card.year, card.name, card.value, card.grade)
+          }</p>`;
+          allOthersContainer.appendChild(cardDiv);
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching cards:", error.message);
+      });
+  };
+
+  // Call the showMyCards function to automatically display cards for the specified trainer
+  showMyCards();
+
+  // Call the showAllOtherCards function to automatically display cards for all other trainers
+  showAllOtherCards();
 }
