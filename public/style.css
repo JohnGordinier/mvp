@@ -1,0 +1,25 @@
+#myContainer,
+#allOthersContainer {
+  border: 2px solid black;
+}
+
+/* Set up flex properties for myContainer */
+#myContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end; /* Push content to the right side */
+}
+
+/* Set up flex properties for allOthersContainer */
+#allOthersContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Push content to the left side */
+}
+
+/* Optional: Adjust width and other styling as needed */
+#myContainer,
+#allOthersContainer {
+  width: 50%; /* Adjust the width as needed */
+  padding: 10px; /* Add padding for better visual appearance */
+}
