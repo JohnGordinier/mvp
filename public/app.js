@@ -40,6 +40,7 @@ console.log("working");
 // }
 
 // Prompt for Trainer ID
+const trainerId = prompt("Enter your Trainer ID");
 if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   alert(
     "Invalid Trainer ID. Please reload the page and enter a valid Trainer ID."
