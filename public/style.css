@@ -3,6 +3,9 @@
   border: 2px solid black;
 }
 
+.allContainers {
+  display: flexbox;
+}
 /* Set up flex properties for myContainer */
 #myContainer {
   display: flex;
