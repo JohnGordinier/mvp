@@ -25,6 +25,26 @@ app.get("/cards", (req, res) => {
   });
 });
 
-app.listen(3030, () => {
-  console.log("listening on port 3030");
+app.get("/cards/:trainerId", (req, res) => {
+  const trainerId = parseInt(req.params.trainerId);
+
+  if (isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
+    return res.status(400).json({ error: "Invalid Trainer ID" });
+  }
+
+  // Query the database for cards associated with the specified trainer
+  const query = "SELECT * FROM cards WHERE trainer_id = $1";
+  client
+    .query(query, [trainerId])
+    .then((result) => {
+      res.json(result.rows);
+    })
+    .catch((error) => {
+      console.error("Error querying database for cards:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
+});
+
+app.listen(PORT || 3030, () => {
+  console.log(`Listening on port ${PORT || 3030}`);
 });

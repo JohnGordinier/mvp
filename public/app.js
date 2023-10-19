@@ -1,12 +1,94 @@
-console.log("working");
-fetch("/cards")
-  .then((response) => {
-    return response.json();
-  })
-  .then((cards) => {
-    for (let card of cards) {
-      document.body.append(card.name);
-    }
-  });
+// console.log("working");
 
-//missed a bunch of steps in here
+// // Prompt for Trainer ID
+// const trainerId = prompt("Enter your Trainer ID");
+
+// // Check if trainerId is valid (you may want to add more validation)
+// if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
+//   alert(
+//     "Invalid Trainer ID. Please reload the page and enter a valid Trainer ID."
+//   );
+// } else {
+//   const container = document.getElementById("dataContainer");
+
+//   // Function to fetch and display cards for a specific trainer
+//   const showMyCards = () => {
+//     // Clear existing content in the container
+//     container.innerHTML = "";
+
+//     // Fetch cards for the specified trainer
+//     fetch(`/cards?trainer_id=${trainerId}`)
+//       .then((response) => response.json())
+//       .then((cards) => {
+//         // Loop through cards and add them to the container
+//         cards.forEach((card) => {
+//           const cardDiv = document.createElement("div");
+//           cardDiv.classList.add("card");
+//           cardDiv.innerHTML = `<p>${card.name}</p>`;
+//           container.appendChild(cardDiv);
+//         });
+//       });
+//   };
+
+//   // Create a button to show the cards
+//   const showCardsButton = document.createElement("button");
+//   showCardsButton.textContent = "My Cards";
+//   showCardsButton.addEventListener("click", showMyCards);
+
+//   // Add the button to the body
+//   document.body.appendChild(showCardsButton);
+// }
+
+// Prompt for Trainer ID
+const trainerId = prompt("Enter your Trainer ID");
+
+// Check if trainerId is valid (you may want to add more validation)
+if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
+  alert(
+    "Invalid Trainer ID. Please reload the page and enter a valid Trainer ID."
+  );
+} else {
+  const myContainer = document.getElementById("myContainer");
+  const allOthersContainer = document.getElementById("allOthersContainer");
+
+  // Function to fetch and display cards for a specific trainer
+  const showMyCards = () => {
+    // Clear existing content in the containers
+    myContainer.innerHTML = "";
+    allOthersContainer.innerHTML = "";
+
+    // Fetch cards for the specified trainer
+    fetch(`/cards/${trainerId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((cards) => {
+        // Display cards
+        cards.forEach((card) => {
+          const cardDiv = document.createElement("div");
+          cardDiv.classList.add("card");
+          cardDiv.innerHTML = `<p>${card.name}</p>`;
+          // Decide whether to append to myContainer or allOthersContainer
+          if (card.trainer_id === trainerId) {
+            myContainer.appendChild(cardDiv);
+          } else {
+            allOthersContainer.appendChild(cardDiv);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching cards:", error.message);
+      });
+  };
+
+  // Create a button to show the cards
+  const showCardsButton = document.createElement("button");
+  showCardsButton.textContent = "My Cards";
+  showCardsButton.addEventListener("click", showMyCards);
+
+  // Add the button to the body
+  document.body.appendChild(showCardsButton);
+}
