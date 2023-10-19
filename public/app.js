@@ -70,7 +70,9 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
         cards.forEach((card) => {
           const cardDiv = document.createElement("div");
           cardDiv.classList.add("card");
-          cardDiv.innerHTML = `<p>${card.name}</p>`;
+          cardDiv.innerHTML = `<p>${
+            (card.year, card.name, card.value, card.grade)
+          }</p>`;
           // Decide whether to append to myContainer or allOthersContainer
           if (card.trainer_id === trainerId) {
             myContainer.appendChild(cardDiv);
