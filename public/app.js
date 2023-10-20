@@ -97,6 +97,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
         return response.json();
       })
       .then((cards) => {
+        console.log("Fetched cards:", cards);
         // Display cards in the allOthersContainer
         cards.forEach((card) => {
           const cardDiv = document.createElement("div");
