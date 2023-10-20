@@ -70,7 +70,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
           const cardDiv = document.createElement("div");
           cardDiv.classList.add("card");
           cardDiv.innerHTML = `<p>${card.year} ${card.name} ${card.value} ${card.grade}</p>`;
-          // Corrected condition: Append to myContainer if trainer_id matches trainerId
+          // Append to myContainer if trainer_id matches trainerId
           if (card.trainer_id == trainerId) {
             myContainer.appendChild(cardDiv);
           } else {
@@ -85,6 +85,39 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
 
   // Call the showMyCards function to automatically display cards for the specified trainer
   showMyCards();
+
+  // Function to fetch and display cards for all other trainers
+  const showAllOtherCards = () => {
+    // Clear existing content in the containers
+    myContainer.innerHTML = "";
+    allOthersContainer.innerHTML = "";
+
+    // Fetch all cards
+    fetch("/cards")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((cards) => {
+        // Filter out cards of the specified trainer
+        const otherTrainersCards = cards.filter(
+          (card) => card.trainer_id !== trainerId
+        );
+
+        // Display cards in the allOthersContainer
+        otherTrainersCards.forEach((card) => {
+          const cardDiv = document.createElement("div");
+          cardDiv.classList.add("card");
+          cardDiv.innerHTML = `<p>${card.year} ${card.name} ${card.value} ${card.grade}</p>`;
+          allOthersContainer.appendChild(cardDiv);
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching cards:", error.message);
+      });
+  };
 
   // Call the showAllOtherCards function to automatically display cards for all other trainers
   showAllOtherCards();
