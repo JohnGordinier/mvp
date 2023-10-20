@@ -41,6 +41,7 @@ console.log("working");
 
 // Prompt for Trainer ID
 const trainerId = prompt("Enter your Trainer ID");
+
 if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   alert(
     "Invalid Trainer ID. Please reload the page and enter a valid Trainer ID."
@@ -48,39 +49,6 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
 } else {
   const myContainer = document.getElementById("myContainer");
   const allOthersContainer = document.getElementById("allOthersContainer");
-
-  // Function to fetch and display cards for the specified trainer
-  const showMyCards = () => {
-    // Clear existing content in the containers
-    myContainer.innerHTML = "";
-    allOthersContainer.innerHTML = "";
-
-    // Fetch cards for the specified trainer
-    fetch(`/cards/${trainerId}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((cards) => {
-        // Display cards
-        cards.forEach((card) => {
-          const cardDiv = document.createElement("div");
-          cardDiv.classList.add("card");
-          cardDiv.innerHTML = `<p>${card.year} ${card.name} ${card.value} ${card.grade}</p>`;
-          // Decide whether to append to myContainer or allOthersContainer
-          if (card.trainer_id === trainerId) {
-            myContainer.appendChild(cardDiv);
-          } else {
-            allOthersContainer.appendChild(cardDiv);
-          }
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching cards:", error.message);
-      });
-  };
 
   // Function to fetch and display cards for the specified trainer
   const showMyCards = () => {
