@@ -88,8 +88,8 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     myContainer.innerHTML = "";
     allOthersContainer.innerHTML = "";
 
-    // Fetch cards for all other trainers
-    fetch(`/cards/${trainerId}`)
+    // Fetch cards for all other trainers (excluding the specified trainer)
+    fetch(`/all-other-cards/${trainerId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
