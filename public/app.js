@@ -157,39 +157,41 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     allOthersContainer.innerHTML = "";
 
     fetch(`/cards/${trainerId}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((fetchedCards) => {
-        // Assign fetched cards to the global variable
-        cards = fetchedCards;
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((fetchedCards) => {
+    // Log the fetched cards to the console
+    console.log("Fetched Cards:", fetchedCards);
 
-        // Display cards
-        cards.forEach((card, index) => {
-          const cardDiv = document.createElement("div");
-          cardDiv.classList.add("card");
-          cardDiv.innerHTML = `<p>${card.year} ${card.name} ${card.value} ${card.grade}</p>`;
+    // Assign fetched cards to the global variable
+    cards = fetchedCards;
 
-          if (card.trainer_id == trainerId) {
-            myContainer.appendChild(cardDiv);
-            cardDiv.addEventListener("click", () =>
-              selectCard(card, myTradeContainer)
-            );
-          } else {
-            allOthersContainer.appendChild(cardDiv);
-            cardDiv.addEventListener("click", () =>
-              selectCard(card, theirTradeContainer)
-            );
-          }
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching cards:", error.message);
-      });
-  };
+    // Display cards
+    cards.forEach((card, index) => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("card");
+      cardDiv.innerHTML = `<p>${card.year} ${card.name} "$"${card.value} ${card.grade}</p>`;
+
+      if (card.trainer_id == trainerId) {
+        myContainer.appendChild(cardDiv);
+        cardDiv.addEventListener("click", () =>
+          selectCard(card, myTradeContainer)
+        );
+      } else {
+        allOthersContainer.appendChild(cardDiv);
+        cardDiv.addEventListener("click", () =>
+          selectCard(card, theirTradeContainer)
+        );
+      }
+    });
+  })
+  .catch((error) => {
+    console.error("Error fetching cards:", error.message);
+  });
 
   // Call the showMyCards function to automatically display cards for the specified trainer
   showMyCards();
