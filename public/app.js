@@ -152,6 +152,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     // Clear existing content in the containers
     myContainer.innerHTML = "";
     allOthersContainer.innerHTML = "";
+
     fetch(`/cards/${trainerId}`)
       .then((response) => {
         if (!response.ok) {
@@ -165,16 +166,14 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
           const cardDiv = document.createElement("div");
           cardDiv.classList.add("card");
           cardDiv.innerHTML = `<p>${card.year} ${card.name} ${card.value} ${card.grade}</p>`;
-          // Append to myContainer if trainer_id matches trainerId
+
           if (card.trainer_id == trainerId) {
             myContainer.appendChild(cardDiv);
-            // Make the card clickable
             cardDiv.addEventListener("click", () =>
               selectCard(card, myTradeContainer)
             );
           } else {
             allOthersContainer.appendChild(cardDiv);
-            // Make the card clickable
             cardDiv.addEventListener("click", () =>
               selectCard(card, theirTradeContainer)
             );
@@ -240,5 +239,15 @@ const handleTradeButtonClick = () => {
   }
 };
 
-// Event listener for the trade button
+// Event listeners
 tradeButton.addEventListener("click", handleTradeButtonClick);
+
+// Event listener for allOthersContainer
+allOthersContainer.addEventListener("click", (event) => {
+  if (event.target.classList.contains("card")) {
+    theirSelectedCard = selectCard(
+      cards[event.target.dataset.index], // Assuming cards is the array of all cards
+      theirTradeContainer
+    );
+  }
+});
