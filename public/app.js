@@ -139,6 +139,9 @@ console.log("working");
 // PROMPT FOR TRAINER ID
 const trainerId = prompt("Enter your Trainer ID");
 
+// Define cards globally
+let cards;
+
 if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   alert(
     "Invalid Trainer ID. Please reload the page and enter a valid Trainer ID."
@@ -160,7 +163,10 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
         }
         return response.json();
       })
-      .then((cards) => {
+      .then((fetchedCards) => {
+        // Assign fetched cards to the global variable
+        cards = fetchedCards;
+
         // Display cards
         cards.forEach((card, index) => {
           const cardDiv = document.createElement("div");
@@ -246,7 +252,7 @@ tradeButton.addEventListener("click", handleTradeButtonClick);
 allOthersContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("card")) {
     theirSelectedCard = selectCard(
-      cards[event.target.dataset.index], // Assuming cards is the array of all cards
+      cards[event.target.dataset.index], // Now cards is globally accessible
       theirTradeContainer
     );
   }
