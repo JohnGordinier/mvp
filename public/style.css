@@ -1,26 +1,167 @@
-#myContainer,
-#allOthersContainer {
-  border: 2px solid black;
+body {
+  background-image: url("/backgroundImage.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-.allContainers {
-  display: flex;
+.text {
+  text-align: center; /* Optional: Center text horizontally */
 }
 
-#myContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+.container {
+  border-radius: 50px;
+  border: 10px solid #3466af;
+  background-color: rgba(199, 160, 8, 0.7);
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+}
+allContainers {
+  display: flex; /* Assuming you want to use flex for .allContainers */
+  flex-direction: column; /* Set the flex direction to column */
 }
 
-#allOthersContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-#myContainer,
-#allOthersContainer {
-  width: 50%;
+a {
+  font-size: 36pt;
+  font-family: pocket monk;
+  color: #ffcb05;
+  -webkit-text-stroke: 1px #3466af;
   padding: 10px;
+}
+
+#tradeButton {
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  will-change: box-shadow, transform;
+  background: #000000;
+  box-shadow: 0px 2px 4px rgb(45 35 66 / 40%),
+    0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #686868;
+  height: 48px;
+  padding: 0 32px;
+  font-size: 18px;
+  border-radius: 6px;
+  color: #ffffff;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  :hover {
+    box-shadow: 0px 4px 8px rgb(45 35 66 / 40%),
+      0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #020202;
+    transform: translateY(-2px);
+  }
+  :active {
+    box-shadow: inset 0px 3px 7px #000000;
+    transform: translateY(2px);
+  }
+}
+
+#tradeProposalsContainer {
+  border: 10px solid #ffcb05;
+  background-color: rgba(70, 96, 209, 0.7);
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  text-align: center;
+  width: 400px;
+  height: 250px;
+  font-size: 24pt;
+  color: #ffcb05;
+  -webkit-text-stroke: 1px #3466af;
+  font-family: pocket monk;
+}
+
+#myContainer,
+#allOthersContainer,
+#myTradeContainer,
+#theirTradeContainer {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  flex: 1; /* Make them share the available space equally */
+  transition: max-height 0.5s ease; /* Add a smooth transition for max-height changes */
+}
+
+#myContainer,
+#allOthersContainer {
+  width: 750px;
+  max-width: 750px;
+}
+
+#myTradeContainer,
+#theirTradeContainer {
+  max-width: 240px;
+  width: 240px;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  text-align: center;
+}
+.proposal-container {
+  border: 4px solid #3466af;
+  background-color: rgba(255, 255, 255, 0.7);
+  margin: 2%;
+  padding: 2%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20pt;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  text-align: center;
+}
+
+#allOthersContainer,
+#myContainer,
+#myTradeContainer,
+#theirTradeContainer {
+  overflow: hidden;
+}
+
+#middleContainer {
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  text-align: center;
+}
+
+#seeMoreLink {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.card {
+  width: 60px; /* Set the width of your card */
+  height: 120px; /* Set the height of your card */
+  background-color: #3466af;
+  background-size: cover;
+  height: auto;
+  padding: 3px;
+  color: rgb(255, 255, 255);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13pt;
+  transition: box-shadow 0.3s ease; /* Add a smooth transition effect */
+
+  /* Initial shadow properties */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  /* Adjusted shadow properties on hover */
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.5);
+}
+
+#seeMoreLink:hover {
+  text-decoration: underline;
+  cursor: pointer; /* Add a pointer cursor on hover */
+}
+
+h1 {
+  font-size: 72pt;
+  font-family: pocket monk;
+  color: #ffcb05;
+  -webkit-text-stroke: 3px #3466af;
+}
+
+h2 {
+  font-size: 36pt;
+  font-family: pocket monk;
+  color: #ffcb05;
+  -webkit-text-stroke: 1px #3466af;
 }

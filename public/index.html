@@ -4,56 +4,120 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pokemon Bank & Trading</title>
-    <script defer src="app.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
       .container {
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
       }
+
       .card {
         border: 1px solid #ddd;
         padding: 10px;
         margin: 10px;
         width: 200px;
       }
+
+      .middle-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: min-content;
+        max-width: max-content;
+        margin: 0 auto; /* Center the container */
+      }
+
+      .card-container {
+        width: min-content;
+        margin-bottom: 20px;
+      }
+
+      #allOthersContainer {
+        width: max-content;
+      }
+
+      #proposalContainer {
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
     <header>
-      <h1>Pokemon Bank & Trading</h1>
+      <h1>Pokemon Bank & Trading Service</h1>
     </header>
-    <div id="myContainer" class="card-container">
-      <h2>My Pokemon cards</h2>
-  </div>
 
-  <div id="allOthersContainer" class="card-container">
-      <h2>Other trainer's cards</h2>
-  </div>
+    <div class="container seeLess">
+      <div id="myContainer" class="card-container">
+        <h2>My Pokemon cards</h2>
+      </div>
 
-  <div id="myTradeContainer" class="card-container trade-container">
-      <h2>My card to trade</h2>
-  </div>
+      <div id="middleContainer" class="middle-container">
+        <div id="myTradeContainer" class="card-container trade-container">
+          <h2>My card</h2>
+        </div>
+        <button id="tradeButton">Trade Submit</button>
+        <br />
+        <div id="theirTradeContainer" class="card-container trade-container">
+          <h2>Their card</h2>
+        </div>
+      </div>
 
-  <div id="theirTradeContainer" class="card-container trade-container">
-      <h2>Their card to trade</h2>
-  </div>
-
-  <button id="tradeButton">Trade Submit</button>
+      <div id="allOthersContainer" class="card-container">
+        <h2>Other trainer's cards</h2>
+      </div>
     </div>
-    </body>
+    <a href="#" id="seeMoreLink">See More Pokemon!</a>
+    <a href="#" id="seeLessLink" style="display: none">See Less Pokemon!</a>
+    <div id="tradeProposalsContainer" class="trade-container"></div>
+    <h2>Trade Proposal</h2>
+
     <nav>
       <!-- Add navigation links here -->
     </nav>
 
     <main>
-      <p>This is where text can go on the page.</p>
+      <p></p>
     </main>
 
     <footer>
-      <p>&copy; 2023 My Page. All rights reserved.</p>
+      <p></p>
     </footer>
 
-    <!-- You can include your JavaScript files here if needed -->
+    <script defer>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Your JavaScript code here
+
+        const myTradeContainer = document.getElementById("myTradeContainer");
+        const theirTradeContainer = document.getElementById(
+          "theirTradeContainer"
+        );
+
+        // Function to handle trade button click
+        const handleTradeButtonClick = () => {
+          // Your existing trade button click logic goes here
+        };
+
+        // Event listener for "Trade" button
+        const tradeButton = document.getElementById("tradeButton");
+        tradeButton.addEventListener("click", handleTradeButtonClick);
+
+        // Other event listeners and functions can go here
+
+        // Fetch and display initial data or perform other setup tasks
+      });
+    </script>
+    <script defer src="app.js"></script>
   </body>
 </html>
