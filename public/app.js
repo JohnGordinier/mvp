@@ -1,10 +1,9 @@
-console.log("working");
-
 const trainerId = window.prompt("Enter your Trainer ID:");
 console.log(`Trainer ID entered: ${trainerId}`);
 
 let cards;
-let displayedCards = 6; // Initial number of cards to display
+// Initial number of cards to display without expanding
+let displayedCards = 6;
 
 let mySelectedCard = null;
 let theirSelectedCard = null;
@@ -24,7 +23,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   const tradeProposalsContainer = document.getElementById("proposalContainer");
   const tradeButton = document.getElementById("tradeButton");
 
-  // Create card div. These are teh Pokemon cards in our banks!
+  // Create card div. These are the Pokemon cards in our banks!
   const createCardDiv = (card) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
@@ -32,11 +31,10 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     return cardDiv;
   };
 
-  // Function to handle card selection
+  // FUNCTION TO HANDLE CARD SELECTION
   const selectCard = (card, container) => {
     // Clear the previously selected card in the same container
     container.innerHTML = "";
-
     const selectedCardDiv = createCardDiv(card);
     container.appendChild(selectedCardDiv);
 
@@ -51,54 +49,47 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     return card;
   };
 
-  // Function to handle trade button click
-  const handleTradeButtonClick = () => {
+  // FUNCTION TO HANDLE TRADE BUTTON CLICK
+  const handleTradeButtonClick = async () => {
     if (mySelectedCard && theirSelectedCard) {
-      // Display trade proposal
       const proposalContainer = document.createElement("div");
       proposalContainer.classList.add("proposal-container");
       proposalContainer.innerHTML = `
-  <p>${mySelectedCard.year} ${mySelectedCard.name}: $${mySelectedCard.value} -- ${mySelectedCard.grade}</p>
-  <p>Pokemon Trade?</p>
-  <p>${theirSelectedCard.year} ${theirSelectedCard.name}: $${theirSelectedCard.value} -- ${theirSelectedCard.grade}</p>
-`;
+        <p>${mySelectedCard.year} ${mySelectedCard.name}: $${mySelectedCard.value} -- ${mySelectedCard.grade}</p>
+        <p>Pokemon Trade?</p>
+        <p>${theirSelectedCard.year} ${theirSelectedCard.name}: $${theirSelectedCard.value} -- ${theirSelectedCard.grade}</p>
+      `;
 
       document.body.appendChild(proposalContainer);
 
-      // Prompt user for confirmation
       areYouSure = window.prompt(
         "Are you sure you want to trade for these Pokemon cards? Type 'Y' for Yes or 'N' for No"
       );
 
-      // Check user's response
+      // CHECK USER'S RESPONSE
       if (
         areYouSure &&
         (areYouSure.toUpperCase() === "Y" || areYouSure.toUpperCase() === "N")
       ) {
-        // Submit the trade to the proposal container
+        await postTradeProposal(
+          mySelectedCard.trainer_id,
+          theirSelectedCard.trainer_id,
+          mySelectedCard.id,
+          theirSelectedCard.id
+        );
 
+        // Submit the trade to the proposal container
         // Reset selected cards and trade containers
         mySelectedCard = null;
         theirSelectedCard = null;
         myTradeContainer.innerHTML = "<h2>My card</h2>";
         theirTradeContainer.innerHTML = "<h2>Their card</h2>";
-
-        // Assign proposalId
-        proposalId = button.dataset.proposal_id;
-        console.log(proposalId);
-
-        //NOT SEEING A PROPOSAL ID, SO CODE ISN'T REACHING HERE!
-
-        // Now, integrate the fetch request to send the response to the server
-        fetchTradeResponse(proposalId, areYouSure);
       } else {
         // Clear the selected cards and trade containers
         mySelectedCard = null;
         theirSelectedCard = null;
         myTradeContainer.innerHTML = "<h2>My card</h2>";
         theirTradeContainer.innerHTML = "<h2>Their card</h2>";
-
-        // Optionally, you can inform the user that the trade was canceled
         alert("Trade canceled.");
       }
     } else {
@@ -107,35 +98,62 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       );
     }
   };
+  // POST TRADE PROPOSAL SENDING THE PROPOSAL TO THE DATABASE FOR PROPOSAL ID
+  const postTradeProposal = async (
+    proposing_trainer_id,
+    accepting_trainer_id,
+    proposed_card_id,
+    accepted_card_id
+  ) => {
+    try {
+      const response = await fetch("/trade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          proposing_trainer_id,
+          accepting_trainer_id,
+          proposed_card_id,
+          accepted_card_id,
+        }),
+      });
 
-  // Event listener for "Trade" button
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Trade proposal sent successfully:", result);
+      } else {
+        throw new Error("Failed to send trade proposal.");
+      }
+    } catch (error) {
+      console.error("Error sending trade proposal:", error.message);
+    }
+  };
+
+  // EVENT LISTENER FOR TRADE BUTTON
   tradeButton.addEventListener("click", handleTradeButtonClick);
 
-  // Event listener for allOthersContainer
+  // EVENT LISTENER FOR ALLAOTHERSCONTAINER
   allOthersContainer.addEventListener("click", (event) => {
     if (event.target.classList.contains("card")) {
       theirSelectedCard = selectCard(
-        cards[event.target.dataset.index], // Now cards is globally accessible
+        cards[event.target.dataset.index],
         theirTradeContainer
       );
     }
   });
 
-  // Fetch and display trade proposals
+  // FETCH AND DISPLAY TRADE PROPOSALS
   const fetchTradeProposals = async () => {
     try {
       const response = await fetch(`/trade/${trainerId}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
       const tradeProposals = await response.json();
 
       // Display trade proposals
       const tradeProposalsContainer = document.getElementById(
         "tradeProposalsContainer"
       );
-
       if (tradeProposalsContainer) {
         tradeProposalsContainer.innerHTML = "";
         tradeProposals.forEach((proposal) => {
@@ -150,9 +168,10 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
         });
       }
 
-      // Add event listener for respond buttons
+      // EVENT LISTENER FOR RESPOND BUTTONS
       document.querySelectorAll(".respond-button").forEach((button) => {
         button.addEventListener("click", async () => {
+          console.log(button.dataset);
           proposalId = button.dataset.proposal_id;
           console.log("Proposal ID:", proposalId);
           // Prompt the user for confirmation
@@ -175,7 +194,6 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
 
             if (response.ok) {
               alert("Trade proposal responded!");
-              // You may want to update the UI or reload trade proposals after a response
               fetchTradeProposals();
             } else {
               alert("Failed to respond to trade proposal. Please try again.");
@@ -190,7 +208,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     }
   };
 
-  // Fetch and display trainer cards
+  // FETCH AND DISPLAY TRAINER CARDS
   const showMyCards = () => {
     myContainer.innerHTML = "";
     fetch(`/cards/${trainerId}`)
@@ -218,7 +236,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       });
   };
 
-  // Fetch and display other trainers' cards
+  // FETCH AND DISPLAY OTHER TRAINER'S CARDS
   const showTheirCards = () => {
     allOthersContainer.innerHTML = "";
     fetch("/cards")
@@ -250,7 +268,8 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       });
   };
 
-  // Event listener for "See More" link
+  // EVENT LISTENER FOR SEE MORE LINK
+  //This will expand to the rest of the cards in the bank from other trainers
   seeMoreLink.addEventListener("click", function () {
     seeMoreLink.style.display = "none";
     cards.slice(displayedCards).forEach((card, index) => {
@@ -263,7 +282,8 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
     seeLessLink.style.display = "block";
   });
 
-  // Event listener for "See Less" link
+  // EVENT LISTENER FOR SEE LESS LINK
+  //This unexpandes the list of other trainer's cards
   seeLessLink.addEventListener("click", function () {
     seeLessLink.style.display = "none";
     allOthersContainer.innerHTML = "";
@@ -280,11 +300,10 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
   });
 
   // CODE FOR TRADING POKEMON CARDS
-
   const myTradeContainer = document.getElementById("myTradeContainer");
   const theirTradeContainer = document.getElementById("theirTradeContainer");
 
-  // Function to handle trade response
+  // FUNCTION TO HANDLE TRADE RESPONSE
   const fetchTradeResponse = async (proposalId, response) => {
     try {
       const fetchResponse = await fetch(`/trade/respond/${proposalId}`, {
@@ -294,11 +313,11 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
         },
         body: JSON.stringify({ response }),
       });
-
       if (fetchResponse.ok) {
         alert("Trade proposal responded!");
         // Update UI or reload trade proposals after a response
         fetchTradeProposals();
+        //Trade proposals will either delete the proposal or will swap the cards for new owners
       } else {
         alert("Failed to respond to trade proposal. Please try again.");
       }

@@ -105,7 +105,7 @@ app.post("/trade", async (req, res) => {
         .json({ error: "Invalid cards or trainers in the trade proposal" });
     }
 
-    // Add the trade proposal to the database
+    // ADD THE TRADE PROPOSAL TO THE DATABASE
     const insertQuery = ` INSERT INTO trade_proposals (proposing_trainer_id, accepting_trainer_id, proposed_card_id, accepted_card_id, status)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
@@ -135,19 +135,12 @@ app.post("/trade", async (req, res) => {
 app.get("/trade/:trainerId", async (req, res) => {
   try {
     const trainerId = parseInt(req.params.trainerId);
-
     if (isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       return res.status(400).json({ error: "Invalid Trainer ID" });
     }
-
-    const query = `
-      SELECT *
-      FROM trade_proposals
-      WHERE proposing_trainer_id = $1 OR accepting_trainer_id = $1;
-    `;
+    const query = `SELECT * FROM trade_proposals WHERE proposing_trainer_id = $1 OR accepting_trainer_id = $1;`;
 
     const result = await client.query(query, [trainerId]);
-
     res.json(result.rows);
   } catch (error) {
     console.error("Error fetching trade proposals:", error);
@@ -171,7 +164,6 @@ app.post("/trade/respond/:id", async (req, res) => {
     const proposalQuery =
       "SELECT * FROM trade_proposals WHERE proposal_id = $1";
     const proposalResult = await client.query(proposalQuery, [id]);
-
     if (proposalResult.rows.length !== 1) {
       return res.status(400).json({ error: "Invalid trade proposal ID" });
     }
@@ -199,14 +191,12 @@ app.post("/trade/respond/:id", async (req, res) => {
     // Remove the trade proposal from the database
     const deleteQuery = "DELETE FROM trade_proposals WHERE proposal_id = $1";
     await client.query(deleteQuery, [id]);
-
     res.status(200).json({ message: "Trade response processed successfully" });
   } catch (error) {
     console.error("Error responding to trade proposal:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-console.log("finished");
 
 app.listen(PORT || 3030, () => {
   console.log(`Listening on port ${PORT || 3030}`);
