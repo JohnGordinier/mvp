@@ -78,4 +78,4 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_trade_proposal_timestamp
 BEFORE UPDATE ON trade_proposals
-FOR EACH ROW EXECUTE FUNCTION update_trade_proposal_timestamp();
+FOR EACH ROW EXECUTE FUNCTION update_trade_proposal_timestamp()

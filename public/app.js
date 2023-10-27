@@ -120,6 +120,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       if (response.ok) {
         const result = await response.json();
         console.log("Trade proposal sent successfully:", result);
+        alert("Trade proposal sent. We will notify the other trainer.");
       } else {
         throw new Error("Failed to send trade proposal.");
       }
@@ -172,7 +173,7 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
       document.querySelectorAll(".respond-button").forEach((button) => {
         button.addEventListener("click", async () => {
           console.log(button.dataset);
-          proposalId = button.dataset.proposal_id;
+          proposalId = button.dataset.proposalId;
           console.log("Proposal ID:", proposalId);
           // Prompt the user for confirmation
           const userConfirmation = window.prompt(
@@ -189,7 +190,9 @@ if (!trainerId || isNaN(trainerId) || trainerId < 1 || trainerId > 9) {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ response: userConfirmation }),
+              body: JSON.stringify({
+                response: userConfirmation.toUpperCase(),
+              }),
             });
 
             if (response.ok) {

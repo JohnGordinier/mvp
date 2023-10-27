@@ -158,39 +158,58 @@ app.post("/trade/respond/:id", async (req, res) => {
     if (!id || (response !== "Y" && response !== "N")) {
       return res.status(400).json({ error: "Invalid response data" });
     }
-    console.log("step1");
 
     // Fetch the trade proposal from the database
     const proposalQuery =
       "SELECT * FROM trade_proposals WHERE proposal_id = $1";
     const proposalResult = await client.query(proposalQuery, [id]);
+
     if (proposalResult.rows.length !== 1) {
       return res.status(400).json({ error: "Invalid trade proposal ID" });
     }
 
     const tradeProposal = proposalResult.rows[0];
-    console.log("step2");
+
+    // Log some information for debugging
+    console.log("Trade Proposal:", tradeProposal);
+
     // Handle the response
     if (response === "Y") {
       // Accept the trade: Update the cards' trainer_id in the database
-      const updateCardsQuery = `
+
+      // First, update the proposing trainer's card
+      const updateProposingCardQuery = `
         UPDATE cards
         SET trainer_id = $1
-        WHERE id IN ($2, $3);
+        WHERE id = $2;
       `;
 
-      const updateValues = [
-        tradeProposal.proposing_trainer_id,
+      const updateProposingCardValues = [
+        tradeProposal.accepting_trainer_id,
         tradeProposal.proposed_card_id,
+      ];
+
+      await client.query(updateProposingCardQuery, updateProposingCardValues);
+
+      // Now, update the accepting trainer's card
+      const updateAcceptingCardQuery = `
+        UPDATE cards
+        SET trainer_id = $1
+        WHERE id = $2;
+      `;
+
+      const updateAcceptingCardValues = [
+        tradeProposal.proposing_trainer_id,
         tradeProposal.accepted_card_id,
       ];
 
-      await client.query(updateCardsQuery, updateValues);
+      await client.query(updateAcceptingCardQuery, updateAcceptingCardValues);
     }
-    console.log("step3");
+
     // Remove the trade proposal from the database
     const deleteQuery = "DELETE FROM trade_proposals WHERE proposal_id = $1";
     await client.query(deleteQuery, [id]);
+
     res.status(200).json({ message: "Trade response processed successfully" });
   } catch (error) {
     console.error("Error responding to trade proposal:", error);
